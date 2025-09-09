@@ -2,6 +2,7 @@
 
 ## How to use?
 ```csharp
+// Implementing the module
 public sealed class MainModule : IApplicationModule
 {
     public ApplicationModuleOrder Order { get; } = ApplicationModuleOrder.Default; // Has implicit conversion from int values
