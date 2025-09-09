@@ -3,7 +3,24 @@
 	<PropertyGroup>
 		<TargetFramework>netstandard2.0</TargetFramework>
 		<LangVersion>latest</LangVersion>
+		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+		<Title>PsdUtilities.ApplicationModules</Title>
+		<Description>Utility library for distributing the application bootstrap
+into seperate modules for the IServiceCollection.</Description>
+		<PackageProjectUrl>https://github.com/psdlex/PsdUtilities.ApplicationModules</PackageProjectUrl>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
+		<RepositoryUrl>https://github.com/psdlex/PsdUtilities.ApplicationModules</RepositoryUrl>
+		<PackageTags>modules;services;servicecollection;iservicecollection</PackageTags>
+		<PackageLicenseExpression>MIT</PackageLicenseExpression>
+		<PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
 	</PropertyGroup>
+
+	<ItemGroup>
+	  <None Include="..\README.md">
+	    <Pack>True</Pack>
+	    <PackagePath>\</PackagePath>
+	  </None>
+	</ItemGroup>
 
 	<ItemGroup>
 	  <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="9.0.9" />
