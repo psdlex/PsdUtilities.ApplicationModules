@@ -2,7 +2,7 @@
 
 ## How to use?
 ```csharp
-// Implementing the module
+// Implementation of the module
 public sealed class MainModule : IApplicationModule
 {
     public ApplicationModuleOrder Order { get; } = ApplicationModuleOrder.Default; // Has implicit conversion from int values
@@ -13,7 +13,7 @@ public sealed class MainModule : IApplicationModule
     }
 }
 
-// Run
+// Utilization of it via the service collection
 IServiceCollection services = new ServiceCollection();
 
 // Scans every assembly from the AppDomain.CurrentDomain
