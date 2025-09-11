@@ -11,10 +11,11 @@ namespace PsdUtilities.ApplicationModules;
 
 public static class ServiceCollectionExtensions
 {
-    public static void RegisterModules(this IServiceCollection services) => services.RegisterModules(_ => true);
-    public static void RegisterModules(this IServiceCollection services, Func<Assembly, bool> assemblyFilter)
+    public static void RegisterModules(this IServiceCollection services) => RegisterModules(services, _ => true);
+    public static void RegisterModules(this IServiceCollection services, Func<Assembly, bool> assemblyFilter) => RegisterModules(services, assemblyFilter, new Dictionary<string, object>());
+    public static void RegisterModules(this IServiceCollection services, Func<Assembly, bool> assemblyFilter, IReadOnlyDictionary<string, object> args)
     {
-        var modules = DiscoverModules(assemblyFilter).ToList();
+        var modules = DiscoverModules(assemblyFilter, args).ToList();
 
         if (modules.Count == 0)
             throw new InvalidOperationException($"{nameof(PsdUtilities)}.{nameof(ApplicationModules)} couldn't discover any application modules in the app domain.");
@@ -26,7 +27,7 @@ public static class ServiceCollectionExtensions
         }
     }
 
-    private static IEnumerable<IApplicationModule> DiscoverModules(Func<Assembly, bool> assemblyFilter)
+    private static IEnumerable<IApplicationModule> DiscoverModules(Func<Assembly, bool> assemblyFilter, IReadOnlyDictionary<string, object> args)
     {
         return AppDomain
             .CurrentDomain
@@ -40,9 +41,26 @@ public static class ServiceCollectionExtensions
             .Where(t => 
                 typeof(IApplicationModule).IsAssignableFrom(t) &&
                 t.IsClass &&
-                t.IsAbstract == false &&
-                t.GetConstructors().Any(c => c.GetParameters().Length == 0))
-            .Select(Activator.CreateInstance)
+                t.IsAbstract == false)
+
+            // instantiating
+            .Select(t =>
+            {
+                var ctor = t.GetConstructors().First();
+                var parameters = ctor.GetParameters();
+                var ctorArgs = parameters.Select(p =>
+                {
+                    if (args.TryGetValue(p.Name!, out var arg))
+                        return arg;
+
+                    if (p.HasDefaultValue)
+                        return p.DefaultValue;
+
+                    throw new InvalidOperationException($"Cannot resolve constructor parameter '{p.Name}' of type '{p.ParameterType}' for application module '{t.FullName}'.");
+                }).ToArray();
+
+                return (IApplicationModule)Activator.CreateInstance(t, ctorArgs)!;
+            })
             .Cast<IApplicationModule>();
     }
 
