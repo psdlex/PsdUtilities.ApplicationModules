@@ -1,10 +1,10 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFramework>net6</TargetFramework>
+		<TargetFramework>netstandard2.0</TargetFramework>
 		<Nullable>enable</Nullable>
 		<LangVersion>latest</LangVersion>
-		<Version>2.1.0</Version>
+		<Version>2.2.0</Version>
 		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
 		<Title>PsdUtilities.ApplicationModules</Title>
 		<Description>Utility library for distributing the application bootstrap into seperate modules for the IServiceCollection and IHost.</Description>
